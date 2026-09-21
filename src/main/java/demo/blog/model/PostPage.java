@@ -6,5 +6,9 @@ public record PostPage(
         List<Post> posts,
         boolean hasPrev,
         boolean hasNext,
-        long lastPage) {
+        long lastPage)
+{
+    public PostPage {
+        posts = List.copyOf(posts);
+    }
 }
