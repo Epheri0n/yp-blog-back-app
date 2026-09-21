@@ -6,7 +6,9 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 public record CommentRequest(
-        @NotNull @Positive Long id,
+        @NotNull(groups = Update.class) @Positive Long id,
         @NotBlank @Size(max = 10000) String text,
-        @NotNull @Positive Long postId) {
+        @NotNull @Positive Long postId)
+{
+    public interface Update { }
 }

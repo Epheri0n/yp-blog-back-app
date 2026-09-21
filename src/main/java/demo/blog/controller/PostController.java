@@ -1,11 +1,14 @@
 package demo.blog.controller;
 
+import java.io.IOException;
+import jakarta.validation.Valid;
+import jakarta.validation.groups.Default;
+
 import demo.blog.model.Post;
 import demo.blog.model.PostImage;
 import demo.blog.model.PostPage;
 import demo.blog.service.BlogService;
 import demo.blog.service.ImageService;
-import jakarta.validation.Valid;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
@@ -35,10 +36,7 @@ public class PostController {
     }
 
     @GetMapping
-    public PostPage list(@RequestParam String search,
-                         @RequestParam int pageNumber,
-                         @RequestParam int pageSize)
-    {
+    public PostPage list(@RequestParam String search, @RequestParam int pageNumber, @RequestParam int pageSize) {
         return service.list(search, pageNumber, pageSize);
     }
 
@@ -54,8 +52,7 @@ public class PostController {
 
     @PutMapping("/{id}")
     public Post update(@PathVariable long id,
-                       @Validated @RequestBody PostRequest request)
-    {
+                       @Validated({Default.class, PostRequest.Update.class}) @RequestBody PostRequest request) {
         if (request.id() != id) {
             throw new IllegalArgumentException("Body id must match path id");
         }
@@ -73,9 +70,7 @@ public class PostController {
     }
 
     @PutMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void upload(@PathVariable long id,
-                       @RequestParam("image") MultipartFile image) throws IOException
-    {
+    public void upload(@PathVariable long id, @RequestParam("image") MultipartFile image) throws IOException {
         if (image.getSize() > ImageService.MAX_BYTES) {
             throw new IllegalArgumentException("Image is larger than 5 MiB");
         }
