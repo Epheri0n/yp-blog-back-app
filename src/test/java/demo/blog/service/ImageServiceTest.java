@@ -29,8 +29,8 @@ public class ImageServiceTest {
 
     @Test
     void rejectsEmptyInvalidAndOversizedContent() {
-        assertThrows(IllegalArgumentException.class, () -> images.validate(new byte[0]));
-        assertThrows(IllegalArgumentException.class, () -> images.validate(new byte[]{1, 2, 3}));
-        assertThrows(IllegalArgumentException.class, () -> images.validate(new byte[ImageService.MAX_BYTES + 1]));
+        assertThrows(BadRequestException.class, () -> images.validate(new byte[0]));
+        assertThrows(BadRequestException.class, () -> images.validate(new byte[]{1, 2, 3}));
+        assertThrows(BadRequestException.class, () -> images.validate(new byte[ImageService.MAX_BYTES + 1]));
     }
 }

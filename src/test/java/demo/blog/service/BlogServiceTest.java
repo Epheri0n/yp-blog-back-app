@@ -62,8 +62,8 @@ class BlogServiceTest extends IntegrationTest {
         assertTrue(service.list("", 2, 2).hasNext());
         assertFalse(service.list("", 3, 2).hasNext());
         assertTrue(service.list("", 4, 2).posts().isEmpty());
-        assertThrows(IllegalArgumentException.class, () -> service.list("", 0, 5));
-        assertThrows(IllegalArgumentException.class, () -> service.list("", 1, 0));
+        assertThrows(BadRequestException.class, () -> service.list("", 0, 5));
+        assertThrows(BadRequestException.class, () -> service.list("", 1, 0));
     }
 
     @Test
