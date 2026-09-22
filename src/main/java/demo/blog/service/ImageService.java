@@ -20,19 +20,19 @@ public class ImageService {
 
     public PostImage validate(byte[] bytes) {
         if (bytes.length == 0 || bytes.length > MAX_BYTES) {
-            throw new IllegalArgumentException("Image must contain between 1 byte and 5 MiB");
+            throw new BadRequestException("Image must contain between 1 byte and 5 MiB");
         }
         try (var stream = new MemoryCacheImageInputStream(new ByteArrayInputStream(bytes))) {
             var readers = ImageIO.getImageReaders(stream);
             if (!readers.hasNext()) {
-                throw new IllegalArgumentException("Expected a PNG, JPEG or GIF image");
+                throw new BadRequestException("Expected a PNG, JPEG or GIF image");
             }
             ImageReader reader = readers.next();
             try {
                 reader.setInput(stream);
                 String type = CONTENT_TYPES.get(reader.getFormatName().toLowerCase(Locale.ROOT));
                 if (type == null || (long) reader.getWidth(0) * reader.getHeight(0) > MAX_PIXELS) {
-                    throw new IllegalArgumentException("Unsupported image format or image larger than 20 megapixels");
+                    throw new BadRequestException("Unsupported image format or image larger than 20 megapixels");
                 }
                 reader.read(0);
                 return new PostImage(bytes, type);
@@ -40,7 +40,7 @@ public class ImageService {
                 reader.dispose();
             }
         } catch (IOException exception) {
-            throw new IllegalArgumentException("Invalid image");
+            throw new BadRequestException("Invalid image");
         }
     }
 }

@@ -1,6 +1,8 @@
 package demo.blog.controller;
 
 import java.io.IOException;
+
+import demo.blog.service.BadRequestException;
 import jakarta.validation.Valid;
 import jakarta.validation.groups.Default;
 
@@ -54,7 +56,7 @@ public class PostController {
     public Post update(@PathVariable long id,
                        @Validated({Default.class, PostRequest.Update.class}) @RequestBody PostRequest request) {
         if (request.id() != id) {
-            throw new IllegalArgumentException("Body id must match path id");
+            throw new BadRequestException("Body id must match path id");
         }
         return service.update(id, request.title(), request.text(), request.tags());
     }
@@ -72,7 +74,7 @@ public class PostController {
     @PutMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void upload(@PathVariable long id, @RequestParam("image") MultipartFile image) throws IOException {
         if (image.getSize() > ImageService.MAX_BYTES) {
-            throw new IllegalArgumentException("Image is larger than 5 MiB");
+            throw new BadRequestException("Image is larger than 5 MiB");
         }
         service.saveImage(id, images.validate(image.getBytes()));
     }

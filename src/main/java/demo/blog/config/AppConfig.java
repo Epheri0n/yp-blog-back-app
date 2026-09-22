@@ -7,5 +7,4 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import(DataConfig.class)
 @ComponentScan({"demo.blog.service", "demo.blog.dao"})
-public class AppConfig {
-}
+public class AppConfig {}

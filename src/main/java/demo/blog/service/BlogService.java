@@ -27,7 +27,7 @@ public class BlogService {
     @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
     public PostPage list(String search, int pageNumber, int pageSize) {
         if (pageNumber < 1 || pageSize < 1 || pageSize > 100) {
-            throw new IllegalArgumentException("pageNumber must be positive; pageSize must be between 1 and 100");
+            throw new BadRequestException("pageNumber must be positive; pageSize must be between 1 and 100");
         }
         SearchFilter filter = SearchFilter.parse(search);
         long count = posts.count(filter);

@@ -1,6 +1,8 @@
 package demo.blog.controller;
 
 import java.util.List;
+
+import demo.blog.service.BadRequestException;
 import jakarta.validation.Valid;
 import jakarta.validation.groups.Default;
 
@@ -47,7 +49,7 @@ public class CommentController {
                           @RequestBody CommentRequest request) {
         matchPost(postId, request.postId());
         if (request.id() != id) {
-            throw new IllegalArgumentException("Body id must match path id");
+            throw new BadRequestException("Body id must match path id");
         }
         return service.updateComment(postId, id, request.text());
     }
@@ -59,7 +61,7 @@ public class CommentController {
 
     private void matchPost(long pathId, long bodyId) {
         if (pathId != bodyId) {
-            throw new IllegalArgumentException("Body postId must match path postId");
+            throw new BadRequestException("Body postId must match path postId");
         }
     }
 }
